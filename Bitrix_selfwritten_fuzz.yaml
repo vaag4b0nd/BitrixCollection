@@ -1,0 +1,31 @@
+id: bitrix-self-written-template
+
+info:
+  name: 1C-Bitrix self-written template
+  author: vag4b0nd
+  description: Start this template must be run with a list of found files and directories
+  severity: info
+
+requests:
+  - method: GET
+    path:
+        - "{{BaseURL}}"
+
+    matchers:
+        - type: regex
+          part: body
+          regex:
+            - '\$\.ajax([^\(]*)\(\{((?:.|\n)*)\}\)'
+            - '\$\.get([^\(]*)\(\{((?:.|\n)*)\}\)'
+            - '\$\.post([^\(]*)\(\{((?:.|\n)*)\}\)'
+            - '\.open([^\(]*)\((.*)\)'
+            - 'fetch([^\(]*)\((.*)\)'
+
+    extractors:
+        - type: regex
+          part: body
+          regex:
+            - /'?(url|method)'?[:^\s]+'(.*)',?/i
+            - /"?(url|method)"?[:^\s]+"(.*)",?/i
+            - \.open([^\(]*)\((.*)\)
+            - fetch([^\(]*)\((.*)\)

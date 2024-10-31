@@ -1,0 +1,32 @@
+id: bitrix_recon
+
+info:
+
+  name: 1C-Bitrix Recon
+  author: vag4b0nd
+  severity: info
+  description: The template collects information about modules, full path disclosure, license
+  tags: Bitrix,admin,full_path,modules
+
+requests:
+  - method: GET
+    path:
+        - "{{RootURL}}/bitrix/license_key.php"
+        - "{{RootURL}}/bitrix/tools/composite_data.php"
+        - "{{RootURL}}/?USER_FIELD_MANAGER=1"
+        - "{{RootURL}}/bitrix/admin/restore_export.php"
+        - "{{RootURL}}/bitrix/admin/tools_index.php"
+        - "{{RootURL}}/bitrix/bitrix.php"
+        - "{{RootURL}}/bitrix/modules/main/ajax_tools.php"
+        - "{{RootURL}}/bitrix/php_interface/after_connect_d7.php"
+        - "{{RootURL}}/bitrix/themes/.default/.description.php"
+        - "{{RootURL}}/bitrix/components/bitrix/main.ui.selector/templates/.default/template.php"
+        - "{{RootURL}}/bitrix/components/bitrix/forum.user.profile.edit/templates/.default/interface.php"
+
+
+    redirects: false
+    matchers-condition: or
+    matchers:
+      - type: status
+        status:
+            - 200

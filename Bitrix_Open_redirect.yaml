@@ -1,0 +1,41 @@
+id: bitrix_open_redirect
+
+info:
+
+  name: 1C-Bitrix Open Redirect
+  author: vag4b0nd
+  severity: medium
+  description: The template detion open redirect in Bitrix
+  tags: Bitrix,open_redirect
+
+requests:
+  - method: GET
+    path:
+        - "{{RootURL}}/{{redirect}}"
+
+    payloads:
+        redirect:
+            - "bitrix/redirect.php?goto={{RootURL}}%252F:123@attacker.example"
+            - "bitrix/rk.php?goto={{RootURL}}%252F:123@attacker.example"
+            - "bitrix/tools/track_mail_click.php?url={{RootURL}}%252F:123@attacker.example"
+            - "bitrix/redirect.php?goto=http://attacker.example"
+            - "bitrix/rk.php?goto=http://attacker.example"
+            - "bitrix/tools/track_mail_click.php?url=http://attacker.example"
+
+    redirects: false
+    matchers-condition: and
+    matchers:
+      - type: regex
+        part: location
+        regex:
+         # - '(?m)^(?:Location\s*?:\s*?)(?:https?:\/\/|\/\/|\/\\\\|\/\\)?(?:[a-zA-Z0-9\-_\.@]*)attacker\.example\/?(\/|[^.].*)?$' # https://regex101.com/r/ZDYhFh/1
+          - 'Location: https:\/\/[a-zA-Z0-9.-]+2F:123+@attacker\.example'
+          - 'Location: http:\/\/[a-zA-Z0-9.-]+2F:123+@attacker\.example'
+
+      - type: status
+        status:
+          - 301
+          - 302
+          - 307
+          - 308
+        condition: or

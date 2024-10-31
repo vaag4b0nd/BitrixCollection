@@ -1,0 +1,35 @@
+id: bitrix_content_spoofing
+
+info:
+
+  name: 1C-Bitrix Content Spoofing
+  author: vag4b0nd
+  severity: medium
+  description: The template detion content spoofing in Bitrix
+  tags: Bitrix,spoofing,content
+
+requests:
+  - method: GET
+    path:
+        - "{{RootURL}}/{{spoofing}}"
+
+    payloads:
+        spoofing:
+            - "bitrix/components/bitrix/mobileapp.list/ajax.php?items[1][TITLE]=TEXT+INJECTION!+PLEASE+CLICK+HERE!&items[1][DETAIL_LINK]=https://attaker.example"
+            - "bitrix/tools/imagepg.php?img=//interesnyefakty.org/wp-content/uploads/chto-takoe-fishing.jpg"
+            - "bitrix/templates/learning/js/swfpg.php?img=//evil.host/evil.swf"
+
+    redirects: false
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+            - "TEXT INJECTION! PLEASE CLICK HERE"
+            - "/chto-takoe-fishing.jpg"
+            - "//evil.host/evil.swf"
+
+      - type: status
+        status:
+          - 200
+

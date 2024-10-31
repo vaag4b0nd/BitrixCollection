@@ -1,0 +1,30 @@
+id: bitrix_admin_panel
+
+info:
+
+  name: 1C-Bitrix Admin PAnel
+  author: vag4b0nd
+  severity: low
+  description: The template collects information about the admin panel
+  tags: Bitrix,admin,full_path,modules
+
+requests:
+  - method: GET
+    path:
+        - "{{RootURL}}/bitrix/components/bitrix/desktop/admin_settings.php"
+        - "{{RootURL}}/bitrix/components/bitrix/map.yandex.search/settings/settings.php"
+        - "{{RootURL}}/bitrix/components/bitrix/player/player_playlist_edit.php"
+        - "{{RootURL}}/bitrix/tools/autosave.php"
+        - "{{RootURL}}/bitrix/tools/get_catalog_menu.php"
+        - "{{RootURL}}/bitrix/tools/upload.php"
+        - "{{RootURL}}/?SEF_APPLICATION_CUR_PAGE_URL\"/bitrix/admin/"
+        - "{{RootURL}}/bitrix/admin"
+
+    redirects: false
+    matchers-condition: or
+    matchers:
+      - type: word
+        part: body
+        words:
+            - "login_wrapper"
+            - "BX.adminLogin"

